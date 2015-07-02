@@ -1,0 +1,14 @@
+Opis baze:
+
+1) Tablica s korisnicima:
+	- user_id - ključ, int, počinje od 1
+	- username, password, e-mail - varchar
+
+2) Tablica s pitanjima:
+	- question_id - redni broj pitanja
+	- question - varchar duljine 200
+
+3) Tablica s odgovorima:
+	- question_id - strani ključ, na koje pitanje je to odgovor
+	- user_id - strani ključ, tko je dao taj odgovor
+	- answer - sam odgovor, varchar duljine 400

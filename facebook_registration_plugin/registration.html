@@ -1,0 +1,35 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title>Facebook Registration plugin</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"> 
+    </head>
+    <body>
+        <div id="add"></div>
+        <div id="container">
+            <label>User Registration using <span style="color: #5c75a9">Facebook Registration Plugin</span></label><br/>
+            <div id="reg_form">
+                <iframe src='http://www.facebook.com/plugins/registration.php?
+                        client_id=YOUR_APP_ID_HERE&
+                        redirect_uri=YOUR_REDIRECTION_URL_HERE&
+                        fields=[
+                        {"name":"name"},
+                        {"name":"email"},
+                        {"name":"password"},
+                        {"name":"gender"},
+                        {"name":"birthday"},
+                        {"name":"captcha"},
+                        {"name":"phone", "description":"Phone Number", "type":"text"}
+                        ]'
+                        scrolling="auto"
+                        frameborder="no"
+                        style="border:none"
+                        allowTransparency="true"
+                        width="500"
+                        height="600">
+                </iframe>
+            </div>
+        </div>
+    </body>
+</html>
