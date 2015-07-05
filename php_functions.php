@@ -123,7 +123,8 @@
 		$result = $stmt->fetchObject();
 		$pitanje = $result->question;
 		//var_dump($_SESSION["user_id"]);
-		echo $broj_pitanja, ".", $pitanje;
+		//echo $broj_pitanja, ".", $pitanje;
+		$_SESSION["pitanje"]=$pitanje;
 	}
 
 
@@ -131,4 +132,19 @@
 		global $conn;
 		if( !isset($_SESSION["broj_pitanja"]) ){ $_SESSION["broj_pitanja"]=1;}
 		else {$_SESSION["broj_pitanja"]=$_SESSION["broj_pitanja"]+1;}
+	}
+
+	function tip_pitanja_pocetak($broj_pitanja){
+			if($broj_pitanja < 31){
+				return '<textarea name="odgovor" rows="4" cols="50">';
+			}
+
+
+	}
+	function tip_pitanja_kraj($broj_pitanja){
+			if($broj_pitanja < 31){
+				return '</textarea>';
+			}
+
+
 	}
