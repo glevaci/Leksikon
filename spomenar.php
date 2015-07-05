@@ -22,5 +22,12 @@
 	1) dohvati pitanje, ispiši ga
 	2) ispiši polje za unos odgovora
 	3) dohvati i ispiši sve odgovore */
+
+	while($_SESSION["broj_pitanja"]<31){
+		setSessionPitanje();
+		setPitanje($_SESSION["broj_pitanja"]);
+
+	}
+
 ?>
 
