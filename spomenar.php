@@ -7,6 +7,9 @@
 
 	$action = isset($_GET["action"]) ? $_GET["action"] : null;
 
+	include "header.php"; 
+
+
     if ($action == "login") {
 		$username = $_POST["logUsername"];
 		$password = $_POST["logPassword"];
@@ -40,6 +43,23 @@
 		
 	}
 
+
+
+	// mi uploadamo sliku
+
+
+
+	
+	if ($_SESSION["broj_pitanja"] == 0) { ?> 
+		<form action="spomenar.php?action=slika" method="post" enctype="multipart/form-data">
+	    	Za početak, oadberite proizvoljnu sliku i pošaljite nam ju. Po mogućnosti sliku svoju.
+	    	<input type="file" name="fileToUpload" id="fileToUpload">
+	    	<input type="submit" value="Pošalji" name="upload">
+		</form>
+		<?php uploadImage();
+	}
+
+	include "footer.php";
 ?>
 <?php include "header.php"; ?> 
 	<form action="<?php echo htmlentities($_SERVER['PHP_SELF']);?>" method="post">

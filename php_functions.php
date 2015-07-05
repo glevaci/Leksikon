@@ -62,7 +62,7 @@
 	        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
 	        $stmt->execute();
 	        $result = $stmt->fetchObject();
-	        include "header.php"; 
+	        //include "header.php"; 
 	        if (!$result) { ?>
 	            <p> Korisničko ime ne postoji u bazi! </p>
 				<a href="login.php"> Vrati se nazad, pokušaj ponovno.</a>
@@ -77,7 +77,7 @@
 	            <p> Pogrešna lozinka! <br/>
 	           	<a href="login.php"> Vrati se nazad, pokušaj ponovno.</a> </p> <?php
 	        }
-			include "footer.php";
+			//include "footer.php";
 	        //$conn = null;
 	    }
 	    catch(PDOException $e) {
@@ -130,8 +130,56 @@
 
 	function setSessionPitanje () {
 		global $conn;
-		if( !isset($_SESSION["broj_pitanja"]) ){ $_SESSION["broj_pitanja"]=1;}
-		else {$_SESSION["broj_pitanja"]=$_SESSION["broj_pitanja"]+1;}
+		if( !isset($_SESSION["broj_pitanja"]) ) {
+			$_SESSION["broj_pitanja"] = 0;
+		}
+		else {
+			$_SESSION["broj_pitanja"] = $_SESSION["broj_pitanja"]+1;
+		}
+	}
+
+	function uploadImage() {
+		$target_dir = "../slike/";
+		$target_file = $target_dir . basename($_FILES["images"]["name"]);
+		$uploadOk = 1;
+		$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+		// Check if image file is a actual image or fake image
+		if(isset($_POST["upload"])) {
+		    $check = getimagesize($_FILES["images"]["tmp_name"]);
+		    if($check !== false) {
+		        echo "File is an image - " . $check["mime"] . ".";
+		        $uploadOk = 1;
+		    } else {
+		        echo "File is not an image.";
+		        $uploadOk = 0;
+		    }
+		}
+		// Check file size
+		if ($_FILES["images"]["size"] > 1048576) {
+		    echo "Prevelika ti je slika!";
+		    $uploadOk = 0;
+		}
+		// Allow certain file formats
+		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+		&& $imageFileType != "gif" ) {
+		    echo "Samo JPG, JPEG, PNG i GIF smiješ poslati!";
+		    $uploadOk = 0;
+		}
+		// Check if $uploadOk is set to 0 by an error
+		if ($uploadOk == 0) {
+		    echo "Oprosti, greška, probaj opet.";
+		// if everything is ok, try to upload file
+		} else {
+			$temp = explode(".",$_FILES["images"]["name"]);
+			$newfilename = $_SESSION["user_id"] . '.' .end($temp);
+
+		    if (move_uploaded_file($_FILES["images"]["tmp_name"], "../slike/" . $newfilename)) {
+		        echo "Uspješno ste poslali ". basename( $_FILES["fileToUpload"]["name"]). ".";
+		    } else {
+		        echo "Isprike, greška pri slanju fajla.";
+		    }
+		}
+
 	}
 
 	function tip_pitanja_pocetak($broj_pitanja){
