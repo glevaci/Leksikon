@@ -57,6 +57,6 @@
 
 	}
 
+<?php
 	include "footer.php";
 ?>
-
