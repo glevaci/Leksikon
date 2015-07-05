@@ -5,9 +5,6 @@
 
 	$action = isset($_GET["action"]) ? $_GET["action"] : null;
 
-	include "header.php"; 
-
-
     if ($action == "login") {
 		$username = $_POST["logUsername"];
 		$password = $_POST["logPassword"];
@@ -26,37 +23,48 @@
 	2) ispiši polje za unos odgovora
 	3) dohvati i ispiši sve odgovore */
 
-	while($_SESSION["broj_pitanja"]<31 || !isset($_SESSION["broj_pitanja"])) {
+	//while($_SESSION["broj_pitanja"]<31 || !isset($_SESSION["broj_pitanja"])) {
+		
+		//echo $_SESSION["broj_pitanja"], ".", $_SESSION["pitanje"]  ;
+
+	//}
+
+	if (isset($_POST['next'])) {
+
+		if (isset($_POST['odgovor'])) {
+			spremiOdgovor();
+		}
+
 		setSessionPitanje();
 		setPitanje($_SESSION["broj_pitanja"]);
+	} ?>
 
-	}
-
-
-
-	// mi uploadamo sliku
-
-
-
-	
+	<?php include "header.php"; 
 	if ($_SESSION["broj_pitanja"] == 0) { ?> 
 		<h1> Dobrodošli. </h1>
-		<form action="spomenar.php?action=slika" method="post" enctype="multipart/form-data">
+		<form action="spomenar.php?action=" method="post" enctype="multipart/form-data">
 	    	Za početak, odaberite proizvoljnu sliku i pošaljite nam ju. Po mogućnosti sliku svoju.
 	    	<input type="file" name="images" id="images">
-	    	<input type="submit" value="Pošalji" name="upload">
+	    	<input type="submit" name="upload" value="Pošalji" >
+			<input type="submit"  name='next' value= "Sljedeće pitanje!" >
 		</form>
-		<?php uploadImage(); ?>
-
-		<div name="slika">
+		<?php uploadImage(); }
+/*
+<!--		<div name="slika">
 			<b> <?php echo $_SESSION["user_id"]; ?> </b>
-			<img src="\<?php echo $showimage; ?>" /> 	
-		</div>
+			<img src=\<?php echo $showimage; ?> />	
+		</div> -->
+*/
+	else  { ?>
 
+		<form action="<?php echo htmlentities($_SERVER['PHP_SELF']);?>" method="post">
+			<p>  <?php echo $_SESSION["broj_pitanja"], ".", $_SESSION["pitanje"]; ?> </p>
+			<?php echo tip_pitanja_pocetak($_SESSION["broj_pitanja"]);?>
+			<?php echo tip_pitanja_kraj($_SESSION["broj_pitanja"]);?>
+			<br>
+			<input type="submit"  name='next' value= "Sljedeće pitanje!" >
+		</form>		 
 
+<?php }
 
-	}
-
-<?php
-	include "footer.php";
-?>
+	include "footer.php"; ?>

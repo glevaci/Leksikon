@@ -63,7 +63,7 @@
 	        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
 	        $stmt->execute();
 	        $result = $stmt->fetchObject();
-	        //include "header.php"; 
+	        include "header.php"; 
 	        if (!$result) { ?>
 	            <p> Korisničko ime ne postoji u bazi! </p>
 				<a href="login.php"> Vrati se nazad, pokušaj ponovno.</a>
@@ -78,7 +78,7 @@
 	            <p> Pogrešna lozinka! <br/>
 	           	<a href="login.php"> Vrati se nazad, pokušaj ponovno.</a> </p> <?php
 	        }
-			//include "footer.php";
+			include "footer.php";
 	        //$conn = null;
 	    }
 	    catch(PDOException $e) {
@@ -124,7 +124,8 @@
 		$result = $stmt->fetchObject();
 		$pitanje = $result->question;
 		//var_dump($_SESSION["user_id"]);
-		echo $broj_pitanja, ".", $pitanje;
+		//echo $broj_pitanja, ".", $pitanje;
+		$_SESSION["pitanje"]=$pitanje;
 	}
 
 
@@ -181,4 +182,14 @@
 		}
 	}
 
+	function tip_pitanja_pocetak($broj_pitanja){
+		if($broj_pitanja < 31){
+			return '<textarea name="odgovor" rows="4" cols="50">';
+		}
+	}
 
+	function tip_pitanja_kraj($broj_pitanja){
+		if($broj_pitanja < 31){
+			return '</textarea>';
+		}
+	}
