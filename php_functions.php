@@ -111,3 +111,22 @@
 	        echo "Error: " . $e->getMessage();
 	    }
 	}
+
+
+	function setPitanje ($broj_pitanja) {
+		global $conn;
+		$stmt = $conn->prepare("SELECT * FROM Questions WHERE question_id=:broj_pitanja");
+	    $stmt->bindParam(':broj_pitanja', $broj_pitanja, PDO::PARAM_STR);
+		$stmt->execute();
+		$result = $stmt->fetchObject();
+		$pitanje = $result->question;
+		//var_dump($_SESSION["user_id"]);
+		echo $broj_pitanja, ".", $pitanje;
+	}
+
+		function setSessionPitanje () {
+		global $conn;
+		if( !isset($_SESSION["broj_pitanja"]) ){ $_SESSION["broj_pitanja"]=1;}
+		else {$_SESSION["broj_pitanja"]=$_SESSION["broj_pitanja"]+1;}
+		
+	}
