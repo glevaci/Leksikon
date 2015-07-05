@@ -5,7 +5,7 @@
     $db_password = "pass.mysql";
     $db_name = "glevacic";
 
-    $conn = new PDO("mysql:host=$servername;dbname=$db_name", $db_username, $db_password);
+    $conn = new PDO("mysql:host=$servername;dbname=$db_name;charset=utf8", $db_username, $db_password);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 	function setSessionId ($username) {
@@ -15,8 +15,10 @@
 		$stmt->execute();
 		$result = $stmt->fetchObject();
 		$_SESSION["user_id"] = (int)$result->user_id;
-		var_dump($_SESSION["user_id"]);
+		//var_dump($_SESSION["user_id"]);
 	}
+
+
 
     // provjeri je li osoba koja se logira preko Facebooka već u bazi, ili ju treba tek ubaciti
     // za doraditi, treba provjeriti ima li ga u bazi
@@ -68,7 +70,7 @@
 	        }
 
 	        else if ( $result->password === crypt($password, $result->password)) { ?>
-	           <p> Uspješna prijava u sustav, uvaženi <?php echo $result->username; ?> ! <br/>"
+	           <p> Uspješna prijava u sustav, uvaženi <?php echo $result->username; ?> ! <br/>
 	            <?php setSessionId($username);
 	        }
 	        else { ?>
@@ -76,7 +78,7 @@
 	           	<a href="login.php"> Vrati se nazad, pokušaj ponovno.</a> </p> <?php
 	        }
 			include "footer.php";
-	        $conn = null;
+	        //$conn = null;
 	    }
 	    catch(PDOException $e) {
 	        echo "Error: " . $e->getMessage();
@@ -105,18 +107,18 @@
 	        $stmt->execute();
 
 	        setSessionId($username);
-	    	$conn = null;
+	    	//$conn = null;
 	    }
 	    catch(PDOException $e) {
 	        echo "Error: " . $e->getMessage();
 	    }
 	}
 
-
 	function setPitanje ($broj_pitanja) {
 		global $conn;
-		$stmt = $conn->prepare("SELECT * FROM Questions WHERE question_id=:broj_pitanja");
-	    $stmt->bindParam(':broj_pitanja', $broj_pitanja, PDO::PARAM_STR);
+		//echo $broj_pitanja;
+		$stmt = $conn->prepare('SELECT * FROM Questions WHERE question_id=:question_id');
+	    $stmt->bindParam(':question_id', $broj_pitanja, PDO::PARAM_INT);
 		$stmt->execute();
 		$result = $stmt->fetchObject();
 		$pitanje = $result->question;
@@ -124,9 +126,9 @@
 		echo $broj_pitanja, ".", $pitanje;
 	}
 
-		function setSessionPitanje () {
+
+	function setSessionPitanje () {
 		global $conn;
 		if( !isset($_SESSION["broj_pitanja"]) ){ $_SESSION["broj_pitanja"]=1;}
 		else {$_SESSION["broj_pitanja"]=$_SESSION["broj_pitanja"]+1;}
-		
 	}

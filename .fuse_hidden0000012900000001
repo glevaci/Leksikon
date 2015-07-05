@@ -3,8 +3,6 @@
 	require_once("php_functions.php");
 	session_start();
 
-	$_SESSION["broj_pitanja"] = 0;
-
 	$action = isset($_GET["action"]) ? $_GET["action"] : null;
 
     if ($action == "login") {
@@ -24,12 +22,5 @@
 	1) dohvati pitanje, ispiši ga
 	2) ispiši polje za unos odgovora
 	3) dohvati i ispiši sve odgovore */
-
-	while($_SESSION["broj_pitanja"]<31 || !isset($_SESSION["broj_pitanja"])) {
-		setSessionPitanje();
-		setPitanje($_SESSION["broj_pitanja"]);
-
-	}
-
 ?>
 
