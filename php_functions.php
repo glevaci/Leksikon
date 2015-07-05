@@ -15,6 +15,7 @@
 		$stmt->execute();
 		$result = $stmt->fetchObject();
 		$_SESSION["user_id"] = (int)$result->user_id;
+		$_SESSION["broj_pitanja"] = 0;
 		//var_dump($_SESSION["user_id"]);
 	}
 
@@ -138,7 +139,8 @@
 	}
 
 	function uploadImage() {
-		$target_dir = "../slike/";
+		echo getcwd() . "<br/>";
+		$target_dir = "./slike/";
 		$target_file = $target_dir . basename($_FILES["images"]["name"]);
 		$uploadOk = 1;
 		$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
@@ -146,10 +148,9 @@
 		if(isset($_POST["upload"])) {
 		    $check = getimagesize($_FILES["images"]["tmp_name"]);
 		    if($check !== false) {
-		        echo "File is an image - " . $check["mime"] . ".";
 		        $uploadOk = 1;
 		    } else {
-		        echo "File is not an image.";
+		        echo "Niste odabrali dokument koji je slika!";
 		        $uploadOk = 0;
 		    }
 		}
@@ -172,11 +173,12 @@
 			$temp = explode(".",$_FILES["images"]["name"]);
 			$newfilename = $_SESSION["user_id"] . '.' .end($temp);
 
-		    if (move_uploaded_file($_FILES["images"]["tmp_name"], "../slike/" . $newfilename)) {
-		        echo "Uspješno ste poslali ". basename( $_FILES["fileToUpload"]["name"]). ".";
+		    if (move_uploaded_file($_FILES["images"]["tmp_name"], "./slike/" . $newfilename)) {
+		        echo "Uspješno ste poslali ". basename( $_FILES["images"]["name"]). ".";
 		    } else {
 		        echo "Isprike, greška pri slanju fajla.";
 		    }
 		}
-
 	}
+
+

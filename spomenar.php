@@ -3,8 +3,6 @@
 	require_once("php_functions.php");
 	session_start();
 
-	$_SESSION["broj_pitanja"] = 0;
-
 	$action = isset($_GET["action"]) ? $_GET["action"] : null;
 
 	include "header.php"; 
@@ -42,12 +40,21 @@
 
 	
 	if ($_SESSION["broj_pitanja"] == 0) { ?> 
+		<h1> Dobrodošli. </h1>
 		<form action="spomenar.php?action=slika" method="post" enctype="multipart/form-data">
-	    	Za početak, oadberite proizvoljnu sliku i pošaljite nam ju. Po mogućnosti sliku svoju.
-	    	<input type="file" name="fileToUpload" id="fileToUpload">
+	    	Za početak, odaberite proizvoljnu sliku i pošaljite nam ju. Po mogućnosti sliku svoju.
+	    	<input type="file" name="images" id="images">
 	    	<input type="submit" value="Pošalji" name="upload">
 		</form>
-		<?php uploadImage();
+		<?php uploadImage(); ?>
+
+		<div name="slika">
+			<b> <?php echo $_SESSION["user_id"]; ?> </b>
+			<img src="\<?php echo $showimage; ?>" /> 	
+		</div>
+
+
+
 	}
 
 	include "footer.php";
