@@ -139,12 +139,38 @@
 		}
 	}
 
+/*
+	function imageUpload() {
+		$imageJPG = $_SESSION["user_id"] . '.jpg';
+		$imageJPEG = $_SESSION["user_id"] . '.jpeg';
+		$imageGIF = $_SESSION["user_id"] . '.gif';
+		$image = $_SESSION["user_id"] . '.png';
+
+
+		
+    		die('File with that name already exists.');
+		}
+	}
+	*/
+
+
 	function uploadImage() {
-		echo getcwd() . "<br/>";
+		// echo getcwd() . "<br/>";
 		$target_dir = "./slike/";
 		$target_file = $target_dir . basename($_FILES["images"]["name"]);
 		$uploadOk = 1;
 		$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+
+		foreach (glob('slike/*') as $image) {	
+			$imageName= pathinfo($image,PATHINFO_FILENAME);
+			echo "Filename: " . $imageName . "<br/>";
+
+			if ($imageName == $_SESSION["user_id"]) {
+				echo $image;
+				unlink($image);
+			}
+		}
+
 		// Check if image file is a actual image or fake image
 		if(isset($_POST["upload"])) {
 		    $check = getimagesize($_FILES["images"]["tmp_name"]);
@@ -166,17 +192,17 @@
 		    echo "Samo JPG, JPEG, PNG i GIF smiješ poslati!";
 		    $uploadOk = 0;
 		}
-		// Check if $uploadOk is set to 0 by an error
 		if ($uploadOk == 0) {
 		    echo "Oprosti, greška, probaj opet.";
-		// if everything is ok, try to upload file
-		} else {
+		} 
+		else {
 			$temp = explode(".",$_FILES["images"]["name"]);
-			$newfilename = $_SESSION["user_id"] . '.' .end($temp);
+			$newFilename = $_SESSION["user_id"] . '.' .end($temp);
 
-		    if (move_uploaded_file($_FILES["images"]["tmp_name"], "./slike/" . $newfilename)) {
+		    if (move_uploaded_file($_FILES["images"]["tmp_name"], "./slike/" . $newFilename)) {
 		        echo "Uspješno ste poslali ". basename( $_FILES["images"]["name"]). ".";
-		    } else {
+		    }
+		    else {
 		        echo "Isprike, greška pri slanju fajla.";
 		    }
 		}

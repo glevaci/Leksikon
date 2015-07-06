@@ -31,38 +31,24 @@
 
 	if (isset($_POST['next'])) {
 
-		
+		if (isset($_POST['odgovor'])) {
+			spremiOdgovor();
+		}
 
 		setSessionPitanje();
 		setPitanje($_SESSION["broj_pitanja"]);
-
-	} 
-
-
-	if (isset($_POST['odg']) ) {
-		if($_POST['odgovor']) {
-			//echo "evo odgovor:". $_POST['odgovor'];
-			spremiOdgovor($_SESSION["user_id"] , $_SESSION["broj_pitanja"], $_POST['odgovor']);
-		}
-			else echo "Unesite, odgovor!";
-	}
-
-	?>
+	} ?>
 
 	<?php include "header.php"; 
 	if ($_SESSION["broj_pitanja"] == 0) { ?> 
 		<h1> Dobrodošli. </h1>
-		<form action="spomenar.php" method="post" enctype="multipart/form-data">
+		<form action="spomenar.php?action=" method="post" enctype="multipart/form-data">
 	    	Za početak, odaberite proizvoljnu sliku i pošaljite nam ju. Po mogućnosti sliku svoju.
 	    	<input type="file" name="images" id="images">
 	    	<input type="submit" name="upload" value="Pošalji" >
 			<input type="submit"  name='next' value= "Sljedeće pitanje!" >
-		</form> <?php 
-
-		if (isset($_POST["upload"])) {
-			uploadImage();
-		}
-	}
+		</form>
+		<?php uploadImage(); }
 /*
 <!--		<div name="slika">
 			<b> <?php echo $_SESSION["user_id"]; ?> </b>
@@ -75,10 +61,6 @@
 			<p>  <?php echo $_SESSION["broj_pitanja"], ".", $_SESSION["pitanje"]; ?> </p>
 			<?php echo tip_pitanja_pocetak($_SESSION["broj_pitanja"]);?>
 			<?php echo tip_pitanja_kraj($_SESSION["broj_pitanja"]);?>
-			<br>
-			<input type="submit" name="odg" value="Pošalji!" >
-			<br>
-			<div> <?php echo prikazi_dosadasnje($_SESSION["broj_pitanja"]);?> </div>
 			<br>
 			<input type="submit"  name='next' value= "Sljedeće pitanje!" >
 		</form>		 
