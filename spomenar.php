@@ -31,13 +31,23 @@
 
 	if (isset($_POST['next'])) {
 
-		if (isset($_POST['odgovor'])) {
-			spremiOdgovor();
-		}
+		
 
 		setSessionPitanje();
 		setPitanje($_SESSION["broj_pitanja"]);
-	} ?>
+
+	} 
+
+
+	if (isset($_POST['odg']) ) {
+		if($_POST['odgovor']) {
+			//echo "evo odgovor:". $_POST['odgovor'];
+			spremiOdgovor($_SESSION["user_id"] , $_SESSION["broj_pitanja"], $_POST['odgovor']);
+		}
+			else echo "Unesite, odgovor!";
+	}
+
+	?>
 
 	<?php include "header.php"; 
 	if ($_SESSION["broj_pitanja"] == 0) { ?> 
@@ -61,6 +71,10 @@
 			<p>  <?php echo $_SESSION["broj_pitanja"], ".", $_SESSION["pitanje"]; ?> </p>
 			<?php echo tip_pitanja_pocetak($_SESSION["broj_pitanja"]);?>
 			<?php echo tip_pitanja_kraj($_SESSION["broj_pitanja"]);?>
+			<br>
+			<input type="submit" name="odg" value="Pošalji!" >
+			<br>
+			<div> <?php echo prikazi_dosadasnje($_SESSION["broj_pitanja"]);?> </div>
 			<br>
 			<input type="submit"  name='next' value= "Sljedeće pitanje!" >
 		</form>		 

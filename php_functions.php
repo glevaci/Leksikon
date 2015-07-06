@@ -184,12 +184,65 @@
 
 	function tip_pitanja_pocetak($broj_pitanja){
 		if($broj_pitanja < 31){
-			return '<textarea name="odgovor" rows="4" cols="50">';
+			return '<input name="odgovor" type="text" />';
 		}
 	}
 
 	function tip_pitanja_kraj($broj_pitanja){
 		if($broj_pitanja < 31){
-			return '</textarea>';
+			return '';
 		}
+	}
+
+	function spremiOdgovor($user, $broj_pitanja, $odgovor) {
+		
+		global $conn;
+
+		try {
+	        // prepare sql and bind parameters
+	        $stmt = $conn->prepare("INSERT INTO Answers (question_id, user_id, answer)
+	        VALUES (:question_id, :user_id, :answer)");
+
+	        
+	       	$stmt->bindParam(':question_id', $broj_pitanja, PDO::PARAM_INT);
+	        $stmt->bindParam(':user_id', $user, PDO::PARAM_INT);
+	        $stmt->bindParam(':answer', $odgovor, PDO::PARAM_STR);
+	        $stmt->execute();
+
+	       
+	    	//$conn = null;
+	    }
+	    catch(PDOException $e) {
+	        echo "Error: " . $e->getMessage();
+	    }
+	}
+
+	function prikazi_dosadasnje ($broj_pitanja) {
+		global $conn;
+		//echo $broj_pitanja;
+		class odgovori{
+			public $question_id, $user_id, $answer,$ispis;
+			public function __construct(){
+					$this->ispis= "{$this->user_id} . {$this->answer}";
+
+			}
+		}
+		
+		$stmt = $conn->prepare("SELECT * FROM Answers WHERE question_id=:my_param ORDER BY user_id");
+		$stmt->bindParam(':my_param', $broj_pitanja, PDO::PARAM_INT);
+
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_CLASS, 'odgovori');
+		while($r= $stmt->fetch()){
+				echo $r->ispis . "<br>";
+		}
+
+		//$stmt = $conn->prepare('SELECT * FROM Questions WHERE question_id=:question_id');
+	    //$stmt->bindParam(':question_id', $broj_pitanja, PDO::PARAM_INT);
+		//$stmt->execute();
+		//$result = $stmt->fetchObject();
+		//$pitanje = $result->question;
+		//var_dump($_SESSION["user_id"]);
+		//echo $broj_pitanja, ".", $pitanje;
+		//$_SESSION["pitanje"]=$pitanje;
 	}
