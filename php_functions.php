@@ -82,7 +82,7 @@
 	        //$conn = null;
 	    }
 	    catch(PDOException $e) {
-	        echo "Error: " . $e->getMessage();
+	        //echo "Error: " . $e->getMessage();
 	    }
 	}
 
@@ -111,7 +111,7 @@
 	    	//$conn = null;
 	    }
 	    catch(PDOException $e) {
-	        echo "Error: " . $e->getMessage();
+	        //echo "Error: " . $e->getMessage();
 	    }
 	}
 
@@ -128,7 +128,6 @@
 		$_SESSION["pitanje"]=$pitanje;
 	}
 
-
 	function setSessionPitanje () {
 		global $conn;
 		if( !isset($_SESSION["broj_pitanja"]) ) {
@@ -139,21 +138,6 @@
 		}
 	}
 
-/*
-	function imageUpload() {
-		$imageJPG = $_SESSION["user_id"] . '.jpg';
-		$imageJPEG = $_SESSION["user_id"] . '.jpeg';
-		$imageGIF = $_SESSION["user_id"] . '.gif';
-		$image = $_SESSION["user_id"] . '.png';
-
-
-		
-    		die('File with that name already exists.');
-		}
-	}
-	*/
-
-
 	function uploadImage() {
 		// echo getcwd() . "<br/>";
 		$target_dir = "./slike/";
@@ -162,12 +146,13 @@
 		$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
 
 		foreach (glob('slike/*') as $image) {	
-			$imageName= pathinfo($image,PATHINFO_FILENAME);
-			echo "Filename: " . $imageName . "<br/>";
+			$imageName = pathinfo($image,PATHINFO_FILENAME);
+			//echo "Filename: " . $imageName . "<br/>";
 
 			if ($imageName == $_SESSION["user_id"]) {
-				echo $image;
+				//echo $image;
 				unlink($image);
+				break;
 			}
 		}
 
@@ -183,7 +168,7 @@
 		}
 		// Check file size
 		if ($_FILES["images"]["size"] > 1048576) {
-		    echo "Prevelika ti je slika!";
+		    echo "Slika je prevelika, odaberi neku manju!";
 		    $uploadOk = 0;
 		}
 		// Allow certain file formats
@@ -208,6 +193,9 @@
 		}
 	}
 
+
+	// dodaj ako je broj pitanja == 5, da vraća <input type="text" id="datepicker">
+ 	// vidi dole numberOfQuestions() funkcije za broj pitanja svake vrste
 	function tip_pitanja_pocetak($broj_pitanja){
 		if($broj_pitanja < 31){
 			return '<input name="odgovor" type="text" />';
@@ -226,20 +214,38 @@
 
 		try {
 	        // prepare sql and bind parameters
-	        $stmt = $conn->prepare("INSERT INTO Answers (question_id, user_id, answer)
-	        VALUES (:question_id, :user_id, :answer)");
-
-	        
-	       	$stmt->bindParam(':question_id', $broj_pitanja, PDO::PARAM_INT);
-	        $stmt->bindParam(':user_id', $user, PDO::PARAM_INT);
-	        $stmt->bindParam(':answer', $odgovor, PDO::PARAM_STR);
+			$stmt = $conn->prepare("SELECT * FROM Answers 
+									WHERE question_id=:question_id AND user_id=:user_id");
+	        $stmt->bindParam(':question_id', $broj_pitanja, PDO::PARAM_INT);
+            $stmt->bindParam(':user_id', $user, PDO::PARAM_INT);
 	        $stmt->execute();
+	        $result = $stmt->fetchObject();
 
-	       
-	    	//$conn = null;
+	        if ($result && !empty(trim($_POST['odgovor']))) {
+	        	$x = empty(trim($_POST['odgovor']));
+	        	var_dump($x);
+
+				$stmt = $conn->prepare("UPDATE Answers SET answer=:answer 
+										WHERE question_id=:question_id AND user_id=:user_id");
+				$stmt->bindParam(':question_id', $broj_pitanja, PDO::PARAM_INT);
+	            $stmt->bindParam(':user_id', $user, PDO::PARAM_INT);
+	            $stmt->bindParam(':answer', $odgovor, PDO::PARAM_STR);				
+	            $stmt->execute();
+			}
+	        
+	        else if(!$result && !empty(trim($_POST['odgovor']))) {
+		        $stmt = $conn->prepare("INSERT INTO Answers (question_id, user_id, answer)
+		        VALUES (:question_id, :user_id, :answer)");
+		       	$stmt->bindParam(':question_id', $broj_pitanja, PDO::PARAM_INT);
+		        $stmt->bindParam(':user_id', $user, PDO::PARAM_INT);
+		        $stmt->bindParam(':answer', $odgovor, PDO::PARAM_STR);
+		        $stmt->execute();
+	    	}
+	    	else 
+	    		echo "<script>alert('Molimo unesite odgovor');</script>";
 	    }
 	    catch(PDOException $e) {
-	        echo "Error: " . $e->getMessage();
+	      	//  echo "Error: " . $e->getMessage();
 	    }
 	}
 
@@ -250,7 +256,6 @@
 			public $question_id, $user_id, $answer,$ispis;
 			public function __construct(){
 					$this->ispis= "{$this->user_id} . {$this->answer}";
-
 			}
 		}
 		
@@ -271,4 +276,57 @@
 		//var_dump($_SESSION["user_id"]);
 		//echo $broj_pitanja, ".", $pitanje;
 		//$_SESSION["pitanje"]=$pitanje;
+	}
+
+	function isAnswered() {
+		if ($_SESSION["broj_pitanja"]==0) {
+			foreach (glob('slike/*') as $image) {	
+				$imageName = pathinfo($image,PATHINFO_FILENAME);
+				//echo "Filename: " . $imageName . "<br/>";
+				if ($imageName == $_SESSION["user_id"]) {
+					return "";
+				}
+			}
+			return "disabled";
+		}
+
+		else {
+			global $conn;
+			try {
+				$stmt = $conn->prepare("SELECT * FROM Answers 
+										WHERE question_id=:question_id AND user_id=:user_id");
+		        $stmt->bindParam(':question_id', $_SESSION["broj_pitanja"], PDO::PARAM_INT);
+	            $stmt->bindParam(':user_id', $_SESSION["user_id"], PDO::PARAM_INT);
+		        $stmt->execute();
+		        $result = $stmt->fetchObject();
+
+		        if ($result)
+		        	return "";
+		        else 
+		        	return "disabled";
+		    }
+		    catch(PDOException $e) {}	
+		}
+	}
+
+	function numberOfIliIli() {
+		global $conn;
+		try {
+			$rowsIliIli = $conn->query("SELECT COUNT(*) FROM ili_ili")->fetchColumn();
+			return intval($rowsIliIli);
+		}
+		catch(PDOException $e) {}
+	}
+
+	function numberOfTextQuestions() {
+		global $conn;
+		try {
+			$rowsQuestions = $conn->query("SELECT COUNT(*) FROM Questions")->fetchColumn();
+			return intval($rowsQuestions);
+		}
+		catch(PDOException $e) {}
+	}
+
+	function totalNumberOfQuestions() {
+		return numberOfTextQuestions()+numberOfIliIli();
 	}

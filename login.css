@@ -1,0 +1,39 @@
+.main {
+	background-image: url("login.jpg");
+	width: 800px;
+	height: 1020px;
+	margin: auto;
+}
+
+.uvod {
+	margin: auto;
+	width: 400px;
+	padding: 40px;
+	text-align: center;
+	margin-left: 200px;
+}
+
+
+
+h1 {
+	position: relative;
+	border-radius: 25px;
+    background: url(paper.jpeg);
+    background-position: left top;
+    background-repeat: repeat;
+    padding: 20px;
+    width: 200px;
+    height: 35px;
+    margin-left: 70px;
+    border: solid;
+    border-width: 2px;
+}
+
+.registracija {
+	margin: auto;
+	width: 400px;
+	padding: 40px;
+	text-align: center;
+	margin-left: 200px;
+    clear: both;
+	}
