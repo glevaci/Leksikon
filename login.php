@@ -19,15 +19,15 @@
 
 			<form name="form_register" method="post" action="spomenar.php?action=register">
 			
-				Korisničko ime: <br> <input type="text" name="regUsername" onkeyup="checkUsername()"> 
+				Korisničko ime: <br> <input type="text" name="regUsername" onkeyup="checkUsername()"> <br/>
 				<span class="registrationFormAlert" id="spanUsername" > </span> <br/>
-				E-mail: <br> <input type="text" name="regMail" onkeyup="checkMail()">
+				E-mail: <br> <input type="text" name="regMail" onkeyup="checkMail()"> <br/>
 				<span class="registrationFormAlert" id="spanMail"> </span> <br/>
-				Lozinka: <br> <input type="password" name="regPassword"><br>
-				Provjera lozinke: <br> <input type="password" name="regConfirmPassword" onkeyup="checkPasswordMatch()"> 
+				Lozinka: <br> <input type="password" name="regPassword"><br> <br/>
+				Provjera lozinke: <br> <input type="password" name="regConfirmPassword" onkeyup="checkPasswordMatch()"> <br/>
 				<span class="registrationFormAlert" id="spanPasswordMatch"> </span> <br/>
-				<br>
-				<input type="submit" value="registracija">
+   				želim postati administrator <br/> <input type="checkbox" name="admin"> <br/>
+   				<input type="submit" value="registracija">
 
 			</form>
 		</div>
@@ -41,6 +41,10 @@
 		        <input type="submit" value="prijava">
 		      </form>
 		</div>
+
+
+		
+		
 	</div>
 
 </body>
