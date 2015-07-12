@@ -482,3 +482,15 @@
 	function totalNumberOfQuestions() {
 		return numberOfTextQuestions()+numberOfIliIli();
 	}
+
+	function notifyAboutNewQuestions() {
+		global $conn;
+		$stmt = $conn->query("SELECT email FROM Users");
+		$stmt->execute();
+		$message = "Poštovani! Unesena su nova pitanja u leksikon.";
+
+		while ($r = $stmt->fetch()){
+			echo $r["email"];
+		    mail($r["email"], "Nova pitanja u leksikonu", $message);
+		}
+	}
