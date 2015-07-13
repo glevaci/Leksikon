@@ -491,6 +491,115 @@
 
 		while ($r = $stmt->fetch()){
 			echo $r["email"];
-		    mail($r["email"], "Nova pitanja u leksikonu", $message);
+		    mail($r["email"], "Poštovani, pojavila su se nova pitanja u leksikonu. Zanimaju nas vaši odgovori!", $message);
 		}
 	}
+
+
+	function unesi_u_bazu_tekst($pitanje){
+			global $conn;
+
+		try {
+	        
+	        $stmt = $conn->prepare("INSERT INTO Questions (question)
+	        VALUES (:question)");
+
+	       	$stmt->bindParam(':question', $pitanje, PDO::PARAM_STR);
+	       
+	        $stmt->execute();
+
+	       
+	    }
+	    catch(PDOException $e) {
+	        //echo "Error: " . $e->getMessage();
+	    }
+
+
+	}
+
+	function unesi_u_bazu_ili($v1,$v2){
+			global $conn;
+
+		try {
+	        
+	        $stmt = $conn->prepare("INSERT INTO ili_ili (value1, value2)
+	        VALUES (:value1, :value2)");
+
+	       	$stmt->bindParam(':value1', $v1, PDO::PARAM_STR);
+	        $stmt->bindParam(':value2', $v2, PDO::PARAM_STR);
+	        $stmt->execute();
+
+	       
+	    }
+	    catch(PDOException $e) {
+	        //echo "Error: " . $e->getMessage();
+	    }
+
+
+	}
+
+		function prikazi_pitanja() {
+		global $conn;
+		//echo $broj_pitanja;
+		class pitanje{
+			public $question_id,$question, $ispis;
+			public function __construct(){
+					$this->ispis= "{$this->question_id} . {$this->question}";
+			}
+		}
+
+		
+		
+		$stmt = $conn->prepare("SELECT * FROM Questions ORDER BY question_id");
+		
+
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_CLASS, 'pitanje');
+		while($r= $stmt->fetch()){
+				echo $r->ispis . "<br>";}
+	
+		
+
+
+		}
+
+
+		function prikazi_pitanja_ili() {
+		global $conn;
+		//echo $broj_pitanja;
+		class pitanje1{
+			public $id_ili, $value1, $value2, $ispis;
+			public function __construct(){
+					$this->ispis= "{$this->id_ili} . {$this->value1} ili {$this->value2} ";
+			}
+		}
+
+		
+		
+		$stmt = $conn->prepare("SELECT * FROM ili_ili ORDER BY id_ili");
+		
+
+		$stmt->execute();
+		$stmt->setFetchMode(PDO::FETCH_CLASS, 'pitanje1');
+		while($r= $stmt->fetch()){
+				echo $r->ispis . "<br>";}
+	
+		
+
+
+		}
+
+   function admin($u){
+
+   	global $conn;
+		
+			$stmt = $conn->prepare('SELECT * FROM Users WHERE user_id=:user_id');
+	    	$stmt->bindParam(':user_id', $u, PDO::PARAM_INT);
+			$stmt->execute();
+			$result = $stmt->fetchObject();
+			$p = $result->admin;
+			
+			return $p;
+
+
+   }
