@@ -67,7 +67,8 @@
 		<?php }
 		
 		if ($_SESSION["broj_pitanja"]==numberOfTextQuestions()) { ?>
-			<script> alert("Sada ćeš morati birati - ili-ili! Dobro razmisli, odgovore na ova pitanje nije moguće ureživati, za razliku od prijašnjih! "); </script>
+			<script> alert("Sada ćeš morati birati - ili-ili! Dobro razmisli, 
+				odgovore na ova pitanje nije moguće uređivati, za razliku od prijašnjih! "); </script>
 		<?php }
 
 		if ($_SESSION["broj_pitanja"]==numberOfTextQuestions()+7) { ?>
@@ -75,7 +76,7 @@
 		<?php }
 
 		if ($_SESSION["broj_pitanja"]==totalNumberOfQuestions()) { ?>
-			<script> alert("Hvala ti što si ispunio naš mali leksikon! Slobodan si!"); </script>
+			<script> alert("Hvala ti što si ispunio naš mali leksikon! Slobodan si! Pozdrav. :) "); </script>
 		<?php }		
 
 		setSessionPitanje();
@@ -84,7 +85,6 @@
 
 	if (isset($_POST['odg']) ) {
 		if($_SESSION["broj_pitanja"]<=numberOfTextQuestions()) {
-		
 			spremiOdgovor($_SESSION["user_id"] , $_SESSION["broj_pitanja"], $_POST['odgovor']); 
 		}
 		else {
@@ -133,24 +133,5 @@
 					<br>
 				</form> <?php 
 			}
-
-			else { ?>
-				<p> Za sam kraj, ako želiš, crtaj do mile volje. Uživaj i pozdrav! </p> 
-				<div id="platno"> 
-					<canvas id="can" width="400" height="400" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
-					<div style="position:absolute;top:12%;left:43%;"> boja </div>
-					<div style="position:absolute;top:15%;left:45%;width:10px;height:10px;background:green;" id="green" onclick="color(this)"></div>
-					<div style="position:absolute;top:15%;left:46%;width:10px;height:10px;background:blue;" id="blue" onclick="color(this)"></div>
-					<div style="position:absolute;top:15%;left:47%;width:10px;height:10px;background:red;" id="red" onclick="color(this)"></div>
-					<div style="position:absolute;top:17%;left:45%;width:10px;height:10px;background:yellow;" id="yellow" onclick="color(this)"></div>
-					<div style="position:absolute;top:17%;left:46%;width:10px;height:10px;background:orange;" id="orange" onclick="color(this)"></div>
-					<div style="position:absolute;top:17%;left:47%;width:10px;height:10px;background:black;" id="black" onclick="color(this)"></div>
-					<div style="position:absolute;top:20%;left:43%;"> gumica </div>
-					<div style="position:absolute;top:23%;left:44.8%;width:15px;height:15px;background:white;border:2px solid;" id="white" onclick="color(this)"></div>
-					<img id="canvasimg" style="position:absolute;top:10%;left:52%;" style="display:none;"> </img>
-					<input type="button" value="obriši" id="clr" size="23" onclick="erase()" style="position:absolute;top:55%;left:15%;">
-				</div> <?php
-			}
-		}?>
-		<?php
-		include "footer.php"; ?>
+		}
+		include "footer.php";

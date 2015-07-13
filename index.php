@@ -7,12 +7,6 @@
 			<h1> Leksikon </h1>
 			<p> Želimo ti dobrodošlicu u naš mali leksikon!	Ostani i ispuni ga do kraja. </p>
 		</div>
-		<!--
-		<div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="false"></div>
-		<div id="status"></div>
-		<div class="facebook">
-			<div> <a href="fbconfig.php"> Prijava preko Facebooka  </a> </div>
-		</div>-->
 
 		<div class="Registracija">
 			<h2> Registracija za nove korisnike: </h2>

@@ -31,7 +31,7 @@
 	        include "header.php"; 
 	        if (!$result) { ?>
 	            <p> Korisničko ime ne postoji u bazi! </p>
-				<a href="login.php"> Vrati se nazad, pokušaj ponovno.</a>
+				<a href="index.php"> Vrati se nazad, pokušaj ponovno.</a>
 				 <?php exit();
 	        }
 
@@ -41,7 +41,7 @@
 	        }
 	        else { ?>
 	            <p> Pogrešna lozinka! <br/>
-	           	<a href="login.php"> Vrati se nazad, pokušaj ponovno.</a> </p> <?php
+	           	<a href="index.php"> Vrati se nazad, pokušaj ponovno.</a> </p> <?php
 	        }
 			include "footer.php";
 	        //$conn = null;
@@ -62,7 +62,7 @@
 	        include "header.php"; 
 	        if ($result) { ?>
 	            <p> To korisničko ime nije dostupno. Odaberite neko drugo. </p>
-				<a href="login.php"> Vrati se nazad, pokušaj ponovno.</a>
+				<a href="index.php"> Vrati se nazad, pokušaj ponovno.</a>
 				<?php exit();
 	        }
 	        $stmt = $conn->prepare("INSERT INTO Users (username, password, email)
@@ -197,7 +197,7 @@
 			$v1=vratiValue($broj_pitanja, 1);
 			$v2=vratiValue($broj_pitanja, 2);
 		 	$r1='<input type="radio" name="ili" value="value1" checked> '
-		 		.$v1.'<br><input type="radio" name="ili" value="value2">' . $v2;
+		 		.$v1.'<br><input type="radio" name="ili" value="value2">' . $v2 . '<br/><br/>';
 			return $r1;
 		}
 	}
