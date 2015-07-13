@@ -1,0 +1,119 @@
+.main {
+	background-image: url("background.jpeg");
+	background-repeat: repeat-y;
+	width: 800px;
+	height: 100%;
+	margin: auto;
+	overflow: auto;
+	padding-bottom: 100px; 
+}
+
+input[type=text].ili {
+	width: 260px;
+	height: 25px;
+}
+
+p {
+	text-align: justify;
+}
+
+input[type=checkbox] {
+    zoom: 1.5;
+}
+
+input[type=text] {
+	width: 550px;
+	height: 50px;
+}
+
+img {
+	display: block;
+	margin: 15px;
+	margin-top: 0px;
+}
+
+.odg {
+	position: relative;
+	margin-left: 240px;
+}
+
+.file {
+	position: relative;
+	margin-left: 150px;
+}
+
+.pitanja {
+	margin: auto;
+	width: 550px;
+	height: 100px;
+	padding: 40px;
+	margin-left: 100px;
+}
+
+.div_image_name {
+	text-align: center;
+}
+
+.div_image_content {
+	margin-bottom: 20px;
+}
+
+#slika {
+	margin-left: 220px;
+}
+
+.prev
+.next {
+    width 49%;
+}
+
+.prev {
+    float: left;
+}
+
+.next {
+    float: right;
+}
+
+
+h1 {
+	position: relative;
+	border-radius: 25px;
+    background: url(paper.jpeg);
+    background-position: left top;
+    background-repeat: repeat;
+    padding: 20px;
+    width: 200px;
+    height: 35px;
+    margin-left: 70px;
+    border: solid;
+    border-width: 2px;
+}
+
+h2 {
+	text-align: center;
+}
+
+h3 {
+	margin-top: 50px;
+	margin-bottom: 20px;
+}
+
+.registracija {
+	margin: auto;
+	width: 400px;
+	height: 400px;
+	padding: 40px;
+	text-align: center;
+	margin-left: 200px;
+    clear: both;
+}
+
+span {
+	color: red;
+}
+
+.pitanja {
+	margin-bottom: 50px;
+	padding-bottom: 50px;
+}

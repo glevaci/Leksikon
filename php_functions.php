@@ -8,8 +8,6 @@
     $conn = new PDO("mysql:host=$servername;dbname=$db_name;charset=utf8", $db_username, $db_password);
 	$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-
-
 	function setSessionId ($username) {
 		global $conn;
 		$stmt = $conn->prepare("SELECT * FROM Users WHERE username=:username");
@@ -19,40 +17,6 @@
 		$_SESSION["user_id"] = (int)$result->user_id;
 		$_SESSION["broj_pitanja"] = 0;
 	}
-
-
-
-    // provjeri je li osoba koja se logira preko Facebooka već u bazi, ili ju treba tek ubaciti
-    // za doraditi, treba provjeriti ima li ga u bazi
-	/*function checkFacebook( $name, $email) {	
-		
-		global $conn;
-		try {
-	   
-	        // set the PDO error mode to exception
-	        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-	       
-	        // prepare sql and bind parameters
-	        $stmt = $conn->prepare("SELECT * FROM Users WHERE username=:username");
-	        $stmt->bindParam(':username', $username, PDO::PARAM_STR);
-	        $stmt->execute();
-	        $result = $stmt->fetchObject();
-	        if (!$result) {
-	            // dodaj u bazu - izvući van dio za baš ubacivanje u bazu kao posebnu funkciju?
-
-	        }
-			else {
-				// postavi $_SESSION["user_id"]
-				setSessionId($username);
-			}
-	        
-	        $conn = null;
-	    }
-
-	    catch(PDOException $e) {
-	        echo "Error: " . $e->getMessage();
-	    }
-	}*/
 
 	// provjeri je li se osoba dobro logirala u sustav
 	function databaseLogin( $username, $password) {
@@ -86,8 +50,6 @@
 	    }
 	}
 
-	// ubaci novog korisnika u bazu
-	// za dodati: provjera je li username jedinstven
 	function databaseRegister($username, $password, $email) {
 		
 		global $conn;
@@ -103,7 +65,6 @@
 				<a href="login.php"> Vrati se nazad, pokušaj ponovno.</a>
 				<?php exit();
 	        }
-	        // prepare sql and bind parameters
 	        $stmt = $conn->prepare("INSERT INTO Users (username, password, email)
 	        VALUES (:username, :password, :email)");
 
@@ -138,14 +99,12 @@
 	function setPitanje ($broj_pitanja) {
 		global $conn;
 		//echo $broj_pitanja;
-		if($broj_pitanja <= numberOfTextQuestions() ){
+		if($broj_pitanja <= numberOfTextQuestions() && $broj_pitanja>0 ){
 			$stmt = $conn->prepare('SELECT * FROM Questions WHERE question_id=:question_id');
 	    	$stmt->bindParam(':question_id', $broj_pitanja, PDO::PARAM_INT);
 			$stmt->execute();
 			$result = $stmt->fetchObject();
 			$pitanje = $result->question;
-			//var_dump($_SESSION["user_id"]);
-			//echo $broj_pitanja, ".", $pitanje;
 			$_SESSION["pitanje"]=$pitanje;}
 			else {
 				$_SESSION["pitanje"]=" ";
@@ -178,7 +137,6 @@
 	}
 
 	function uploadImage() {
-		// echo getcwd() . "<br/>";
 		$target_dir = "./slike/";
 		$target_file = $target_dir . basename($_FILES["images"]["name"]);
 		$uploadOk = 1;
@@ -186,16 +144,13 @@
 
 		foreach (glob('slike/*') as $image) {	
 			$imageName = pathinfo($image,PATHINFO_FILENAME);
-			//echo "Filename: " . $imageName . "<br/>";
 
 			if ($imageName == $_SESSION["user_id"]) {
-				//echo $image;
 				unlink($image);
 				break;
 			}
 		}
 
-		// Check if image file is a actual image or fake image
 		if(isset($_POST["upload"])) {
 		    $check = getimagesize($_FILES["images"]["tmp_name"]);
 		    if($check !== false) {
@@ -205,12 +160,10 @@
 		        $uploadOk = 0;
 		    }
 		}
-		// Check file size
 		if ($_FILES["images"]["size"] > 1048576) {
 		    echo "Slika je prevelika, odaberi neku manju!";
 		    $uploadOk = 0;
 		}
-		// Allow certain file formats
 		if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
 		&& $imageFileType != "gif" ) {
 		    echo "Samo JPG, JPEG, PNG i GIF smiješ poslati!";
@@ -232,28 +185,21 @@
 		}
 	}
 
-
-	// dodaj ako je broj pitanja == 5, da vraća <input type="text" id="datepicker">
- 	// vidi dole numberOfQuestions() funkcije za broj pitanja svake vrste
 	function tip_pitanja($broj_pitanja){
 		if($broj_pitanja==5){
-		
-			return '<input type="text" id="datepicker">';
+			return '<input type="text" name="odgovor" id="datepicker">';
 		}
 		
 		elseif($broj_pitanja<=numberOfTextQuestions()){
-		
 			return '<input name="odgovor" type="text" />';
 		}
 		else {
 			$v1=vratiValue($broj_pitanja, 1);
 			$v2=vratiValue($broj_pitanja, 2);
-			
-			
-		 	$r1='<input type="radio" name="ili" value="value1" checked> '.$v1.'<br><input type="radio" name="ili" value="value2">' . $v2;
-		 
-		return $r1;
-	}
+		 	$r1='<input type="radio" name="ili" value="value1" checked> '
+		 		.$v1.'<br><input type="radio" name="ili" value="value2">' . $v2;
+			return $r1;
+		}
 	}
 
 
@@ -262,11 +208,8 @@
 		global $conn;
 
 		try {
-	        // prepare sql and bind parameters
-			
 	        if($broj_pitanja<=numberOfTextQuestions()){
 	    	
-
 	    		$stmt = $conn->prepare("SELECT * FROM Answers 
 									WHERE question_id=:question_id AND user_id=:user_id");
 		        $stmt->bindParam(':question_id', $broj_pitanja, PDO::PARAM_INT);
@@ -276,7 +219,7 @@
 
 	    	    if ($result && !empty(trim($_POST['odgovor']))) {
 	        		$x = empty(trim($_POST['odgovor']));
-	        		var_dump($x);
+	        		//var_dump($x);
 
 					$stmt = $conn->prepare("UPDATE Answers SET answer=:answer 
 										WHERE question_id=:question_id AND user_id=:user_id");
@@ -300,19 +243,14 @@
 
 	    	else{
 
-
-	    		
 	    		$b=$broj_pitanja - numberOfTextQuestions();
 	    		
-
 	    		$stmt = $conn->prepare("SELECT * FROM Answers_ili_ili 
 									WHERE question_id=:question_id AND user_id=:user_id");
 		        $stmt->bindParam(':question_id', $b, PDO::PARAM_INT);
     	        $stmt->bindParam(':user_id', $user, PDO::PARAM_INT);
 	    	    $stmt->execute();
 	        	$result = $stmt->fetchObject();
-
-
 
 	    		$stmt1 = $conn->prepare("SELECT * FROM ili_ili WHERE id_ili=:id_ili");
 		        $stmt1->bindParam(':id_ili', $b, PDO::PARAM_INT);
@@ -321,7 +259,7 @@
 	        	$o="";
 	        	
 	        	if($odgovor=="value1") {
-	        			$o=$result1->value1;
+	        		$o=$result1->value1;
 	        	}
 	       		else {
 	       			$o=$result1->value2;
@@ -333,9 +271,7 @@
 			        $s->bindParam(':user_id', $user, PDO::PARAM_INT);
 			        $s->bindParam(':answer', $o, PDO::PARAM_STR);
 			        
-		    	    $s->execute();
-		    	    //ovo mi ne radi neznam zašto
-		    	
+		    	    $s->execute();		    	
 		    	}
 		    	elseif($result ) {
 		    		$stmt = $conn->prepare("UPDATE Answers_ili_ili SET answer=:answer 
@@ -344,25 +280,14 @@
 	        	    $stmt->bindParam(':user_id', $user, PDO::PARAM_INT);
 	            	$stmt->bindParam(':answer', $o, PDO::PARAM_STR);				
 	        	    $stmt->execute();
-
-
 		    	}
-
-
 
 		    	else{	
 	    			echo "<script>alert('Greska pri dohvacanju iz baze!');</script>";
 		    	}
-
-
 	    	}
-
-
-
 	    }
-	    catch(PDOException $e) {
-	      	//  echo "Error: " . $e->getMessage();
-	    }
+	    catch(PDOException $e) {}
 	}
 
 	function prikazi_dosadasnje ($broj_pitanja) {
@@ -371,7 +296,7 @@
 		class odgovori{
 			public $question_id, $user_id, $answer,$ispis;
 			public function __construct(){
-					$this->ispis= "{$this->user_id} . {$this->answer}";
+				$this->ispis= "<b>{$this->user_id}.</b> {$this->answer}";
 			}
 		}
 
@@ -395,18 +320,7 @@
 		$stmt->setFetchMode(PDO::FETCH_CLASS, 'odgovori');
 		while($r= $stmt->fetch()){
 				echo $r->ispis . "<br>";}
-
-
 		}
-
-		//$stmt = $conn->prepare('SELECT * FROM Questions WHERE question_id=:question_id');
-	    //$stmt->bindParam(':question_id', $broj_pitanja, PDO::PARAM_INT);
-		//$stmt->execute();
-		//$result = $stmt->fetchObject();
-		//$pitanje = $result->question;
-		//var_dump($_SESSION["user_id"]);
-		//echo $broj_pitanja, ".", $pitanje;
-		//$_SESSION["pitanje"]=$pitanje;
 	}
 
 	function isAnswered() {
@@ -455,9 +369,6 @@
 		        	return "disabled";
 		    }
 		    catch(PDOException $e) {}	
-
-
-
 		}
 	}
 
@@ -497,109 +408,72 @@
 
 
 	function unesi_u_bazu_tekst($pitanje){
-			global $conn;
+		global $conn;
 
 		try {
-	        
 	        $stmt = $conn->prepare("INSERT INTO Questions (question)
-	        VALUES (:question)");
-
+	        						VALUES (:question)");
 	       	$stmt->bindParam(':question', $pitanje, PDO::PARAM_STR);
-	       
 	        $stmt->execute();
-
 	       
 	    }
-	    catch(PDOException $e) {
-	        //echo "Error: " . $e->getMessage();
-	    }
-
-
+	    catch(PDOException $e) {}
 	}
 
 	function unesi_u_bazu_ili($v1,$v2){
-			global $conn;
+		global $conn;
 
 		try {
-	        
 	        $stmt = $conn->prepare("INSERT INTO ili_ili (value1, value2)
-	        VALUES (:value1, :value2)");
+	        						VALUES (:value1, :value2)");
 
 	       	$stmt->bindParam(':value1', $v1, PDO::PARAM_STR);
 	        $stmt->bindParam(':value2', $v2, PDO::PARAM_STR);
 	        $stmt->execute();
-
-	       
 	    }
-	    catch(PDOException $e) {
-	        //echo "Error: " . $e->getMessage();
-	    }
-
-
+	    catch(PDOException $e) {}
 	}
 
-		function prikazi_pitanja() {
+	function prikazi_pitanja() {
 		global $conn;
 		//echo $broj_pitanja;
 		class pitanje{
 			public $question_id,$question, $ispis;
 			public function __construct(){
-					$this->ispis= "{$this->question_id} . {$this->question}";
+				$this->ispis= "<b> {$this->question_id}.</b> {$this->question}";
 			}
 		}
 
-		
-		
 		$stmt = $conn->prepare("SELECT * FROM Questions ORDER BY question_id");
-		
-
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_CLASS, 'pitanje');
 		while($r= $stmt->fetch()){
 				echo $r->ispis . "<br>";}
-	
-		
-
-
 		}
 
-
-		function prikazi_pitanja_ili() {
+	function prikazi_pitanja_ili() {
 		global $conn;
 		//echo $broj_pitanja;
 		class pitanje1{
 			public $id_ili, $value1, $value2, $ispis;
 			public function __construct(){
-					$this->ispis= "{$this->id_ili} . {$this->value1} ili {$this->value2} ";
+					$this->ispis= "<b> {$this->id_ili}.</b> {$this->value1} ili {$this->value2} ";
 			}
 		}
 
-		
-		
 		$stmt = $conn->prepare("SELECT * FROM ili_ili ORDER BY id_ili");
-		
-
 		$stmt->execute();
 		$stmt->setFetchMode(PDO::FETCH_CLASS, 'pitanje1');
 		while($r= $stmt->fetch()){
 				echo $r->ispis . "<br>";}
-	
-		
+	}
 
-
-		}
-
-   function admin($u){
-
-   	global $conn;
-		
-			$stmt = $conn->prepare('SELECT * FROM Users WHERE user_id=:user_id');
-	    	$stmt->bindParam(':user_id', $u, PDO::PARAM_INT);
-			$stmt->execute();
-			$result = $stmt->fetchObject();
-			$p = $result->admin;
-			
-			return $p;
-
-
+   	function admin($u){
+   		global $conn;
+		$stmt = $conn->prepare('SELECT * FROM Users WHERE user_id=:user_id');
+	    $stmt->bindParam(':user_id', $u, PDO::PARAM_INT);
+		$stmt->execute();
+		$result = $stmt->fetchObject();
+		$p = $result->admin;
+		return $p;
    }
