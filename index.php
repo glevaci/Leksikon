@@ -21,7 +21,7 @@
 				Provjera lozinke: <br> <input type="password" name="regConfirmPassword" onkeyup="checkPasswordMatch()"> <br/>
 				<span class="registrationFormAlert" id="spanPasswordMatch"> </span> <br/>
    				želim postati administrator <br/> (upute se dobiju na gore uneseni mail) <br/>
-   				<input type="checkbox" name="admin" onclick="checkAdmin()"> <br/>
+   				<input type="checkbox" name="admin"> <br/>
    				<input type="submit" value="registracija">
 
 			</form>

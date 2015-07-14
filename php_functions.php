@@ -89,8 +89,8 @@
 
 		        $subject = "Potvrda prijave za administratora leksikona";
 		        $message = "Potvrdi prijavu za administratora leksikona:
-		        			\r\n" . $link . "\n\n 
-		        			Pozdrav, \n 
+		        			\r\n" . $link . "\r\n 
+		        			Pozdrav, \r\n 
 		        			administratori tvojeg leksikona";
 
 		        mail($email, $subject, $message);
@@ -325,14 +325,6 @@
 		$stmt->setFetchMode(PDO::FETCH_CLASS, 'odgovori');
 		while($r= $stmt->fetch()){
 				echo $r->ispis . "<br>";}
-		}
-
-		if ($_SESSION["broj_pitanja"]==(totalNumberOfQuestions())) {
-			echo "<br/><br/>Hvala ti što si ispunio naš mali leksikon! Slobodan si! Pozdrav. :)"; ?>
-			<form action="<?php echo htmlentities($_SERVER['PHP_SELF']);?>" method="post"> 
-				<input type="submit" name='end' value= "završi" >
-			</form>
-			<?php
 		}	
 	}
 
@@ -413,8 +405,8 @@
 		$stmt->execute();
 		$subject = "Nova pitanja u leksikonu";
 		$message = "Poštovani, pojavila su se nova pitanja u leksikonu.
-					Zanimaju nas vaši odgovori! \n\n
-					Pozdrav,\n
+					Zanimaju nas vaši odgovori! \r\n
+					Pozdrav,\r\n
 					administratori tvojeg leksikona";
 
 		while ($r = $stmt->fetch()){
