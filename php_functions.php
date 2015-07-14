@@ -87,8 +87,13 @@
 
 		        $link = "http://192.168.89.245/~glevaci/Projekt/activate.php?passkey=".$code;
 
-		        $message = "Potvrdi prijavu:\r\n".$link;
-		        mail($email, "Potvrda prijave", $message);
+		        $subject = "Potvrda prijave za administratora leksikona";
+		        $message = "Potvrdi prijavu za administratora leksikona:
+		        			\r\n" . $link . "\n\n 
+		        			Pozdrav, \n 
+		        			administratori tvojeg leksikona";
+
+		        mail($email, $subject, $message);
 			}
 			setSessionId($username);
 			header("Location: postlogin.php");
@@ -197,7 +202,7 @@
 			$v1=vratiValue($broj_pitanja, 1);
 			$v2=vratiValue($broj_pitanja, 2);
 		 	$r1='<input type="radio" name="ili" value="value1" checked> '
-		 		.$v1.'<br><input type="radio" name="ili" value="value2">' . $v2 . '<br/><br/>';
+		 		.$v1.'<br><input type="radio" name="ili" value="value2"> '. $v2 . '<br/><br/>';
 			return $r1;
 		}
 	}
@@ -321,6 +326,14 @@
 		while($r= $stmt->fetch()){
 				echo $r->ispis . "<br>";}
 		}
+
+		if ($_SESSION["broj_pitanja"]==(totalNumberOfQuestions())) {
+			echo "<br/><br/>Hvala ti što si ispunio naš mali leksikon! Slobodan si! Pozdrav. :)"; ?>
+			<form action="<?php echo htmlentities($_SERVER['PHP_SELF']);?>" method="post"> 
+				<input type="submit" name='end' value= "završi" >
+			</form>
+			<?php
+		}	
 	}
 
 	function isAnswered() {
@@ -398,11 +411,15 @@
 		global $conn;
 		$stmt = $conn->query("SELECT email FROM Users");
 		$stmt->execute();
-		$message = "Poštovani! Unesena su nova pitanja u leksikon.";
+		$subject = "Nova pitanja u leksikonu";
+		$message = "Poštovani, pojavila su se nova pitanja u leksikonu.
+					Zanimaju nas vaši odgovori! \n\n
+					Pozdrav,\n
+					administratori tvojeg leksikona";
 
 		while ($r = $stmt->fetch()){
-			echo $r["email"];
-		    mail($r["email"], "Poštovani, pojavila su se nova pitanja u leksikonu. Zanimaju nas vaši odgovori!", $message);
+			//echo $r["email"];
+		    mail($r["email"], $subject, $message);
 		}
 	}
 

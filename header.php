@@ -11,7 +11,10 @@
   	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
   	<script>
   		$(function() {
-    			$( "#datepicker" ).datepicker({ dateFormat: "dd.mm.yy." }).val();
+    			$( "#datepicker" ).datepicker({ dateFormat: "dd.mm.yy.", changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            yearRange: "-100:+0" }).val();
   		});
   	</script>
 </head>

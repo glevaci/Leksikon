@@ -7,6 +7,10 @@
 
 	$action = isset($_GET["action"]) ? $_GET["action"] : null;
 
+	if (isset($_POST["end"])) {
+		header("Location: index.php");
+	}
+
     if ($action == "login") {
 		$username = $_POST["logUsername"];
 		$password = $_POST["logPassword"];
@@ -73,11 +77,7 @@
 
 		if ($_SESSION["broj_pitanja"]==numberOfTextQuestions()+7) { ?>
 			<script> alert("Slijede ili-ili pitanja nekih naših korisnika."); </script>
-		<?php }
-
-		if ($_SESSION["broj_pitanja"]==totalNumberOfQuestions()) { ?>
-			<script> alert("Hvala ti što si ispunio naš mali leksikon! Slobodan si! Pozdrav. :) "); </script>
-		<?php }		
+		<?php }	
 
 		setSessionPitanje();
 		setPitanje($_SESSION["broj_pitanja"]);

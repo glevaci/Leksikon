@@ -30,3 +30,11 @@ function checkPasswordMatch() {
     else
         $("#spanPasswordMatch").text("");
 }
+
+
+function checkAdmin() {
+    if ($('#admin').is(':checked'))
+        $("#adminSelected").text("Detaljne upute ćeš dobiti na mail.");
+    else
+        $("#adminSelected").text("");
+}
